@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.test.context.ActiveProfiles;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -12,15 +13,17 @@ import java.time.Month;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
+import static ru.javawebinar.topjava.Profiles.JPA;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
+@ActiveProfiles(profiles = {JPA})
 public class MealServiceTest extends AbstractServiceTest {
 
     @Autowired
     private MealService service;
 
-    @Override
+    @Test
     public void create() {
         Meal created = service.create(getNew(), USER_ID);
         int newId = created.id();
@@ -30,36 +33,36 @@ public class MealServiceTest extends AbstractServiceTest {
         MEAL_MATCHER.assertMatch(service.get(newId, USER_ID), newMeal);
     }
 
-    @Override
+    @Test
     public void get() {
         Meal actual = service.get(ADMIN_MEAL_ID, ADMIN_ID);
         MEAL_MATCHER.assertMatch(actual, adminMeal1);
     }
 
-    @Override
+    @Test
     public void getAll() {
         MEAL_MATCHER.assertMatch(service.getAll(USER_ID), meals);
     }
 
-    @Override
+    @Test
     public void getNotFound() {
         assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND, USER_ID));
     }
 
-    @Override
+    @Test
     public void update() {
         Meal updated = getUpdated();
         service.update(updated, USER_ID);
         MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), getUpdated());
     }
 
-    @Override
+    @Test
     public void delete() {
         service.delete(MEAL1_ID, USER_ID);
         assertThrows(NotFoundException.class, () -> service.get(MEAL1_ID, USER_ID));
     }
 
-    @Override
+    @Test
     public void deleteNotFound() {
         assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND, USER_ID));
     }

@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
+import org.springframework.test.context.ActiveProfiles;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -13,8 +14,10 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.util.List;
 
 import static org.junit.Assert.assertThrows;
+import static ru.javawebinar.topjava.Profiles.*;
 import static ru.javawebinar.topjava.UserTestData.*;
 
+@ActiveProfiles(profiles = {JPA})
 public class UserServiceTest extends AbstractServiceTest {
 
     @Autowired
@@ -28,7 +31,8 @@ public class UserServiceTest extends AbstractServiceTest {
         cacheManager.getCache("users").clear();
     }
 
-    @Override
+    //@Override
+    @Test
     public void create() {
         User created = service.create(getNew());
         int newId = created.id();
@@ -38,37 +42,43 @@ public class UserServiceTest extends AbstractServiceTest {
         USER_MATCHER.assertMatch(service.get(newId), newUser);
     }
 
-    @Override
+    //@Override
+    @Test
     public void get() {
         User user = service.get(USER_ID);
         USER_MATCHER.assertMatch(user, UserTestData.user);
     }
 
-    @Override
+    //@Override
+    @Test
     public void getAll() {
         List<User> all = service.getAll();
         USER_MATCHER.assertMatch(all, admin, guest, user);
     }
 
-    @Override
+    //@Override
+    @Test
     public void getNotFound() {
         assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND));
     }
 
-    @Override
+    //@Override
+    @Test
     public void update() {
         User updated = getUpdated();
         service.update(updated);
         USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
     }
 
-    @Override
+    //@Override
+    @Test
     public void delete() {
         service.delete(USER_ID);
         assertThrows(NotFoundException.class, () -> service.get(USER_ID));
     }
 
-    @Override
+    //@Override
+    @Test
     public void deleteNotFound() {
         assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND));
     }

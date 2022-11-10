@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +14,9 @@ import ru.javawebinar.topjava.repository.UserRepository;
 
 import java.util.List;
 
+import static ru.javawebinar.topjava.Profiles.*;
+
+@Profile({JDBC})
 @Repository
 public class JdbcUserRepository implements UserRepository {
 
@@ -42,8 +46,14 @@ public class JdbcUserRepository implements UserRepository {
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
             user.setId(newKey.intValue());
         } else if (namedParameterJdbcTemplate.update("""
-                   UPDATE users SET name=:name, email=:email, password=:password, 
-                   registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id
+                   UPDATE users
+                      SET name = :name,
+                          email = :email, 
+                          password = :password, 
+                          registered = :registered,
+                          enabled = :enabled, 
+                          calories_per_day = :caloriesPerDay
+                    WHERE id = :id
                 """, parameterSource) == 0) {
             return null;
         }
@@ -52,19 +62,19 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public boolean delete(int id) {
-        return jdbcTemplate.update("DELETE FROM users WHERE id=?", id) != 0;
+        return jdbcTemplate.update("DELETE FROM users WHERE id = ?", id) != 0;
     }
 
     @Override
     public User get(int id) {
-        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id);
+        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id = ?", ROW_MAPPER, id);
         return DataAccessUtils.singleResult(users);
     }
 
     @Override
     public User getByEmail(String email) {
 //        return jdbcTemplate.queryForObject("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
-        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
+        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE email = ?", ROW_MAPPER, email);
         return DataAccessUtils.singleResult(users);
     }
 

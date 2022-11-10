@@ -42,7 +42,7 @@ abstract public class JdbcMealRepository<T> implements MealRepository {
                 .addValue("id", meal.getId())
                 .addValue("description", meal.getDescription())
                 .addValue("calories", meal.getCalories())
-                .addValue("date_time", localDateTime_to_Date_or_LocalDateTime(meal.getDateTime()))
+                .addValue("date_time", prepareLocalDateTimeForDB(meal.getDateTime()))
                 .addValue("user_id", userId);
 
         if (meal.isNew()) {
@@ -82,9 +82,11 @@ abstract public class JdbcMealRepository<T> implements MealRepository {
         return jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id = ?  AND date_time >= ? AND date_time < ? ORDER BY date_time DESC",
                 ROW_MAPPER, userId,
-                localDateTime_to_Date_or_LocalDateTime(startDateTime),
-                localDateTime_to_Date_or_LocalDateTime(endDateTime));
+                prepareLocalDateTimeForDB(startDateTime),
+                prepareLocalDateTimeForDB(endDateTime));
     }
 
-    abstract public T localDateTime_to_Date_or_LocalDateTime(LocalDateTime localDateTime);
+    public T prepareLocalDateTimeForDB(LocalDateTime localDateTime) {
+        return (T) localDateTime;
+    }
 }
