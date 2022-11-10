@@ -17,7 +17,7 @@ import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.Profiles.*;
 import static ru.javawebinar.topjava.UserTestData.*;
 
-@ActiveProfiles(profiles = {JPA})
+@ActiveProfiles(DATAJPA)
 public class UserServiceTest extends AbstractServiceTest {
 
     @Autowired

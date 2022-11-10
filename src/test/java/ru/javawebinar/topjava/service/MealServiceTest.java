@@ -13,11 +13,11 @@ import java.time.Month;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
-import static ru.javawebinar.topjava.Profiles.JPA;
+import static ru.javawebinar.topjava.Profiles.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
-@ActiveProfiles(profiles = {JPA})
+@ActiveProfiles({DATAJPA})
 public class MealServiceTest extends AbstractServiceTest {
 
     @Autowired

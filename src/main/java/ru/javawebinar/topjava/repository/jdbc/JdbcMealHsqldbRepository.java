@@ -12,7 +12,8 @@ import java.util.Date;
 import static ru.javawebinar.topjava.Profiles.*;
 
 
-@Profile({"!" + JPA, "!" + DATAJPA, HSQL_DB})
+//@Profile({"!" + JPA, "!" + DATAJPA, HSQL_DB})
+@Profile({HSQL_DB})
 @Repository
 public class JdbcMealHsqldbRepository extends JdbcMealRepository<Date> {
 
