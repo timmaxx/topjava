@@ -25,74 +25,87 @@ public class JspMealController {
 
 
     @GetMapping("")
-    public String getMeals(
+    public String getAll(Model model) {
+        log.info("getAll");
+        model.addAttribute("meals",
+                MealsUtil.getTos(
+                        service.getAll(SecurityUtil.authUserId()),
+                        SecurityUtil.authUserId()));
+        return "/meals";
+    }
+
+    @GetMapping("/filter")
+    public String getByFilter(
             Model model,
-            @RequestParam(value = "action", required = false) String action,
-            @RequestParam(value = "id", required = false) Integer mealId,
             @RequestParam(value = "startDate", required = false) String startDate,
             @RequestParam(value = "endDate", required = false) String endDate,
             @RequestParam(value = "startTime", required = false) String startTime,
             @RequestParam(value = "endTime", required = false) String endTime) {
-        log.info("meals");
-
-        switch (action == null ? "all" : action) {
-            case "delete" -> {
-                service.delete( mealId, SecurityUtil.authUserId());
-                model.addAttribute("meals",
-                        MealsUtil.getTos(
-                                service.getAll(SecurityUtil.authUserId()),
-                                SecurityUtil.authUserId()));
-                return "meals";
-            }
-            case "create" -> {
-                model.addAttribute( "meal", new Meal());
-                return "mealForm";
-            }
-            case "update" -> {
-                model.addAttribute( "meal", service.get( mealId, SecurityUtil.authUserId()));
-                return "mealForm";
-            }
-            case "filter" -> {
-                model.addAttribute("meals",
-                        MealsUtil.getFilteredTos(
-                                service.getBetweenInclusive(
-                                        parseLocalDate(startDate),
-                                        parseLocalDate(endDate),
-                                        SecurityUtil.authUserId()),
-                                SecurityUtil.authUserId(),
-                                parseLocalTime(startTime),
-                                parseLocalTime(endTime)));
-                return "meals";
-            }
-            default -> {
-                model.addAttribute("meals",
-                        MealsUtil.getTos(
-                                service.getAll(SecurityUtil.authUserId()),
-                                SecurityUtil.authUserId()));
-                return "meals";
-            }
-        }
+        log.info("getByFilter");
+        model.addAttribute("meals",
+                MealsUtil.getFilteredTos(
+                        service.getBetweenInclusive(
+                                parseLocalDate(startDate),
+                                parseLocalDate(endDate),
+                                SecurityUtil.authUserId()),
+                        SecurityUtil.authUserId(),
+                        parseLocalTime(startTime),
+                        parseLocalTime(endTime)));
+        return "/meals";
+        //return "redirect:/meals";
     }
 
+    @GetMapping("/create")
+    public String create(Model model) {
+        log.info("create");
+        model.addAttribute( "meal", new Meal());
+        return "mealForm";
+    }
 
-    @PostMapping("")
-    public String setMeal(HttpServletRequest request) {
-        log.info("setMeal {}");
+    @GetMapping("/update/{id}")
+    public String update(
+            Model model,
+            @PathVariable( "id") Integer id) {
+        log.info("update");
+        model.addAttribute( "meal", service.get(id, SecurityUtil.authUserId()));
+        return "mealForm";
+    }
 
-        Meal meal;
+    @GetMapping("/delete/{id}")
+    public String delete(
+            Model model,
+            @PathVariable( "id") Integer id) {
+        log.info("delete");
+        service.delete(id, SecurityUtil.authUserId());
+        model.addAttribute("meals",
+                MealsUtil.getTos(
+                        service.getAll(SecurityUtil.authUserId()),
+                        SecurityUtil.authUserId()));
+        return "redirect:/meals";
+    }
+
+    @PostMapping("/create")
+    public String create(HttpServletRequest request) {
+        log.info("(post)create");
         LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
         String description = request.getParameter("description");
         Integer calories = Integer.parseInt(request.getParameter("calories"));
-        if (request.getParameter("id") == null || request.getParameter("id").equals("")) {
-            meal = new Meal(
-                    dateTime, description, calories);
-            service.create(meal, SecurityUtil.authUserId());
-        } else {
-            meal = new Meal(
-                    Integer.parseInt(request.getParameter("id")),
-                    dateTime, description, calories);
-            service.update(meal, SecurityUtil.authUserId());
-        }
-        return "redirect:meals";
+        Meal meal = new Meal(
+                dateTime, description, calories);
+        service.create(meal, SecurityUtil.authUserId());
+        return "redirect:/meals";
+    }
+
+    @PostMapping("/update/{id}")
+    public String update(HttpServletRequest request) {
+        log.info("(post)update");
+        LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
+        String description = request.getParameter("description");
+        Integer calories = Integer.parseInt(request.getParameter("calories"));
+        Meal meal = new Meal(
+                Integer.parseInt(request.getParameter("id")),
+                dateTime, description, calories);
+        service.update(meal, SecurityUtil.authUserId());
+        return "redirect:/meals";
     }
 }

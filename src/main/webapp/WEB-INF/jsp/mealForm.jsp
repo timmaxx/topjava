@@ -8,12 +8,11 @@
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
 <section>
-    <hr>
+    <hr><jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <h2><spring:message code="meal.create" var="mealCreate"/><spring:message code="meal.edit" var="mealEdit"/>
-        ${param.action == 'create' ? mealCreate : mealEdit}
+        ${meal.id == null ? mealCreate : mealEdit}
     </h2>
-    <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
-    <form method="post" action="meals">
+    <form method="post" action="${meal.id == null ? "/meals/create" : "/meals/update/{meal.id}"}">
         <input type="hidden" name="id" value="${meal.id}">
         <dl>
             <dt><spring:message code="meal.dateTime"/>:</dt>
