@@ -10,8 +10,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.model.UserRoles;
 import ru.javawebinar.topjava.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -68,7 +70,21 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public List<User> getAll() {
-        return jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
+        List<User> users = jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
+        for (User user : users) {
+            user.setRoles(new ArrayList<>());
+        }
+        BeanPropertyRowMapper<UserRoles> ROW_MAPPER_USER_ROLES = BeanPropertyRowMapper.newInstance(UserRoles.class);
+        List<UserRoles> userRoless = jdbcTemplate.query("SELECT * FROM user_roles ORDER BY role", ROW_MAPPER_USER_ROLES);
+        for (int i = 0; i < userRoless.size(); i++) {
+            int finalI = i;
+            User user = users.stream()
+                    .filter(u -> u.getId().equals(userRoless.get(finalI).getUserId()))
+                    .findAny()
+                    .orElse(null);
+            user.getRoles().add(userRoless.get(i).getRole());
+        }
+        return users;
     }
 
     @Override
