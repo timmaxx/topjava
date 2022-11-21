@@ -20,6 +20,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.javawebinar.topjava.util.ValidationUtil.validateFields;
+
 @Repository
 @Transactional(readOnly = true)
 public class JdbcUserRepository implements UserRepository {
@@ -46,6 +48,7 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     @Transactional
     public User save(User user) {
+        validateFields(user);
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
 
         if (user.isNew()) {
@@ -70,7 +73,7 @@ public class JdbcUserRepository implements UserRepository {
         return user;
     }
 
-    private int[] batchInsert(int userId, User user /*List<Role> roles*/) {
+    private int[] batchInsert(int userId, User user) {
         if (user.getRoles() == null || user.getRoles().size() == 0) {
             return null;
         }
@@ -106,11 +109,10 @@ public class JdbcUserRepository implements UserRepository {
         if (user == null) {
             return null;
         }
-        int id = user.getId();
         user.setRoles(new ArrayList<>());
         List<UserRoles> userRoless = jdbcTemplate.query(
                 "SELECT * FROM user_roles WHERE user_id = ? ORDER BY role",
-                ROW_MAPPER_USER_ROLES, id);
+                ROW_MAPPER_USER_ROLES, user.getId());
         for (int i = 0; i < userRoless.size(); i++) {
             int finalI = i;
             User loopUser = users.stream()

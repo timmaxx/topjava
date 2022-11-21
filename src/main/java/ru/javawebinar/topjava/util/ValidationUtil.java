@@ -6,7 +6,13 @@ import org.springframework.lang.NonNull;
 import ru.javawebinar.topjava.model.AbstractBaseEntity;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import javax.validation.*;
+import java.util.Set;
+
 public class ValidationUtil {
+
+    private static final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    private static final Validator validator = validatorFactory.getValidator();
 
     private ValidationUtil() {
     }
@@ -51,5 +57,24 @@ public class ValidationUtil {
     public static Throwable getRootCause(@NonNull Throwable t) {
         Throwable rootCause = NestedExceptionUtils.getRootCause(t);
         return rootCause != null ? rootCause : t;
+    }
+
+    public static <T> void validateFields(T row) {
+        Set<ConstraintViolation<T>> violations = validator.validate(row);
+        if (violations.size() == 0) {
+            return;
+        }
+        StringBuilder errMessage = new StringBuilder("Validation failed for classes [" + row.getClass().getName() + "]\n");
+        errMessage.append("List of constraint violations:[\n");
+        for (ConstraintViolation<T> constraintViolation : violations) {
+            System.out.println("constraintViolation = " + constraintViolation);
+            errMessage.append("        ").append(constraintViolation).append("\n");
+        }
+        errMessage.append("]");
+        // ToDo: Думаю, что хорошо-бы сначала попытаться откатить транзакцию
+        //  (а то если вызов будет после insert или update, то таблица в БД будет изменена,
+        //  и только потом возбуждено исключение.
+        //  javax.persistence.RollbackException, and then
+        throw new ConstraintViolationException(errMessage.toString(), violations);
     }
 }
