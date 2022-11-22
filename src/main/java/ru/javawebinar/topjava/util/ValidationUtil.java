@@ -64,15 +64,22 @@ public class ValidationUtil {
         if (violations.size() == 0) {
             return;
         }
+        String errMessage = "Validation failed for classes [" + row.getClass().getName() + "]";
+        /*
+        // Этот блок создавал сообщения, подобные тем, которые были при работе с профилями jpa или datajpa.
+        // Сейчас осталась только заголовочная часть.
+        // Оставил, что-бы сравнить с решением.
         StringBuilder errMessage = new StringBuilder("Validation failed for classes [" + row.getClass().getName() + "]\n");
         errMessage.append("List of constraint violations:[\n");
         for (ConstraintViolation<T> constraintViolation : violations) {
             errMessage.append("        ").append(constraintViolation).append("\n");
         }
         errMessage.append("]");
+        */
         // ToDo: Думаю, что хорошо-бы ещё и откатить транзакцию
         //  (а то если вызов будет после insert или update, то таблица в БД будет изменена),
         //  и только потом возбуждать исключение.
-        throw new ConstraintViolationException(errMessage.toString(), violations);
+        // throw new ConstraintViolationException(errMessage.toString(), violations);
+        throw new ConstraintViolationException(errMessage, violations);
     }
 }
