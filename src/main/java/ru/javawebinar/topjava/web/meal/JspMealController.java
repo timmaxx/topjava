@@ -1,10 +1,9 @@
-package ru.javawebinar.topjava.web;
+package ru.javawebinar.topjava.web.meal;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.web.meal.AbstractMealController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -21,7 +20,7 @@ public class JspMealController extends AbstractMealController {
         return "mealForm";
     }
 
-    @GetMapping("")
+    @GetMapping
     public String getAll(Model model) {
         model.addAttribute("meals", super.getAll());
         return "/meals";
@@ -62,7 +61,7 @@ public class JspMealController extends AbstractMealController {
 
     @PostMapping("/create")
     public String create(HttpServletRequest request) {
-        Meal meal = createMealFromRequest(request, null);
+        Meal meal = createFromRequest(request, null);
         super.create(meal);
         return "redirect:/meals";
     }
@@ -70,12 +69,12 @@ public class JspMealController extends AbstractMealController {
     @PostMapping("/update/{id}")
     public String update(HttpServletRequest request) {
         int id = Integer.parseInt(request.getParameter("id"));
-        Meal meal = createMealFromRequest(request, id);
+        Meal meal = createFromRequest(request, id);
         super.update(meal, id);
         return "redirect:/meals";
     }
 
-    private Meal createMealFromRequest(HttpServletRequest request, Integer id) {
+    private Meal createFromRequest(HttpServletRequest request, Integer id) {
         LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
         String description = request.getParameter("description");
         int calories = Integer.parseInt(request.getParameter("calories"));
