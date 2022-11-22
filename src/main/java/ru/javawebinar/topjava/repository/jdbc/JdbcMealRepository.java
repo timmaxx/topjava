@@ -39,6 +39,12 @@ public class JdbcMealRepository implements MealRepository {
     }
 
     @Override
+    // Сейчас, если валидация не пройдёт, то возбудится исключение ConstraintViolationException.
+    // Предполагал, что
+    // @Transactional(rollbackFor = ConstraintViolationException.class)
+    // приведёт к откату транзакции и в т.ч. по стеку исключений будет видно другое более раннее исключение
+    // ...RollBack..., но что-то так не получилось...
+    // ToDo: хорошо-бы всё-таки ещё и транзакцию откатывать в validateFields(user).
     @Transactional
     public Meal save(Meal meal, int userId) {
         MapSqlParameterSource map = new MapSqlParameterSource()

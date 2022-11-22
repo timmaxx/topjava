@@ -67,14 +67,12 @@ public class ValidationUtil {
         StringBuilder errMessage = new StringBuilder("Validation failed for classes [" + row.getClass().getName() + "]\n");
         errMessage.append("List of constraint violations:[\n");
         for (ConstraintViolation<T> constraintViolation : violations) {
-            System.out.println("constraintViolation = " + constraintViolation);
             errMessage.append("        ").append(constraintViolation).append("\n");
         }
         errMessage.append("]");
-        // ToDo: Думаю, что хорошо-бы сначала попытаться откатить транзакцию
-        //  (а то если вызов будет после insert или update, то таблица в БД будет изменена,
-        //  и только потом возбуждено исключение.
-        //  javax.persistence.RollbackException, and then
+        // ToDo: Думаю, что хорошо-бы ещё и откатить транзакцию
+        //  (а то если вызов будет после insert или update, то таблица в БД будет изменена),
+        //  и только потом возбуждать исключение.
         throw new ConstraintViolationException(errMessage.toString(), violations);
     }
 }
