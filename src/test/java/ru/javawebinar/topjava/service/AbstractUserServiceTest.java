@@ -96,6 +96,28 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         USER_MATCHER.assertMatch(all, admin, guest, user);
     }
 
+/*
+    // Из-за кэширования в тестах может возникнуть ошибка.
+    // Для её демонстрации нужно:
+    // 1. Для этого класса должно быть
+    //    @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+    // 2. Для JdbcUserServiceTest закомментировать
+    //    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    // 3. раскомментировать эти два метода
+    @Test
+    public void a_update() {
+        User updated = getUpdated();
+        service.update(updated);
+        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
+        List<User> all = service.getAll();
+    }
+
+    @Test
+    public void b_getAll() {
+        List<User> all = service.getAll();
+        USER_MATCHER.assertMatch(all, admin, guest, user);
+    }
+*/
     @Test
     public void createWithException() throws Exception {
         if (isJdbcProfileSet()) {
