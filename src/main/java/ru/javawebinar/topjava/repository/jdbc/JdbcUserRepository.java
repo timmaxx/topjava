@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.model.UserRoles;
 import ru.javawebinar.topjava.repository.UserRepository;
 
 import java.sql.PreparedStatement;
@@ -120,32 +119,34 @@ public class JdbcUserRepository implements UserRepository {
                 "SELECT * FROM user_roles WHERE user_id = ? ORDER BY role",
                 ROW_MAPPER_USER_ROLES, user.getId());
         for (int i = 0; i < userRoless.size(); i++) {
-            int finalI = i;
-            User loopUser = users.stream()
-                    .filter(u -> u.getId().equals(userRoless.get(finalI).getUserId()))
-                    .findAny()
-                    .orElse(null);
-            loopUser.getRoles().add(userRoless.get(i).getRole());
+            user.getRoles().add(userRoless.get(i).getRole());
         }
         return user;
     }
 
     @Override
     public List<User> getAll() {
+        /* // Хорошо-бы сделать за один запрос, но как в java переменную это засунуть?...
+        List<User> users = jdbcTemplate.query("" +
+                "SELECT u.*, ur.role" +
+                "  FROM users u LEFT JOIN user_roles ur ON u.id = ur.user_id" +
+                " ORDER BY name, email"
+                , ROW_MAPPER);
+        */
+
         List<User> users = jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
-        for (User user : users) {
-            user.setRoles(new ArrayList<>());
-        }
         List<UserRoles> userRoless = jdbcTemplate.query(
                 "SELECT * FROM user_roles ORDER BY role",
                 ROW_MAPPER_USER_ROLES);
-        for (int i = 0; i < userRoless.size(); i++) {
-            int finalI = i;
-            User user = users.stream()
-                    .filter(u -> u.getId().equals(userRoless.get(finalI).getUserId()))
-                    .findAny()
-                    .orElse(null);
-            user.getRoles().add(userRoless.get(i).getRole());
+
+        for (User user : users) {
+            user.setRoles(new ArrayList<>());
+            List<Role> roles = userRoless
+                    .stream()
+                    .filter(ur -> ur.userId.equals(user.getId()))
+                    .map(ur -> ur.role)
+                    .toList();
+            user.getRoles().addAll(roles);
         }
         return users;
     }
@@ -154,5 +155,35 @@ public class JdbcUserRepository implements UserRepository {
     @Transactional
     public boolean delete(int id) {
         return jdbcTemplate.update("DELETE FROM users WHERE id = ?", id) != 0;
+    }
+
+
+    public static class UserRoles {
+        private Integer userId;
+        private Role role;
+
+        public UserRoles() {
+        }
+
+        public UserRoles(Integer userId, Role role) {
+            this.userId = userId;
+            this.role = role;
+        }
+
+        public Integer getUserId() {
+            return userId;
+        }
+
+        public void setUserId(Integer userId) {
+            this.userId = userId;
+        }
+
+        public Role getRole() {
+            return role;
+        }
+
+        public void setRole(Role role) {
+            this.role = role;
+        }
     }
 }
