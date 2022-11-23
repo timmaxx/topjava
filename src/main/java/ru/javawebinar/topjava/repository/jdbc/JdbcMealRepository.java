@@ -44,16 +44,15 @@ public class JdbcMealRepository implements MealRepository {
     // @Transactional(rollbackFor = ConstraintViolationException.class)
     // приведёт к откату транзакции и в т.ч. по стеку исключений будет видно другое более раннее исключение
     // ...RollBack..., но что-то так не получилось...
-    // ToDo: хорошо-бы всё-таки ещё и транзакцию откатывать в validateFields(user).
     @Transactional
     public Meal save(Meal meal, int userId) {
+        validateFields(meal);
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", meal.getId())
                 .addValue("description", meal.getDescription())
                 .addValue("calories", meal.getCalories())
                 .addValue("date_time", meal.getDateTime())
                 .addValue("user_id", userId);
-        validateFields(meal);
         if (meal.isNew()) {
             Number newId = insertMeal.executeAndReturnKey(map);
             meal.setId(newId.intValue());

@@ -50,7 +50,6 @@ public class JdbcUserRepository implements UserRepository {
     // @Transactional(rollbackFor = ConstraintViolationException.class)
     // приведёт к откату транзакции и в т.ч. по стеку исключений будет видно другое более раннее исключение
     // ...RollBack..., но что-то так не получилось...
-    // ToDo: хорошо-бы всё-таки ещё и транзакцию откатывать в validateFields(user).
     @Transactional
     public User save(User user) {
         validateFields(user);
@@ -118,8 +117,8 @@ public class JdbcUserRepository implements UserRepository {
         List<UserRoles> userRoless = jdbcTemplate.query(
                 "SELECT * FROM user_roles WHERE user_id = ? ORDER BY role",
                 ROW_MAPPER_USER_ROLES, user.getId());
-        for (int i = 0; i < userRoless.size(); i++) {
-            user.getRoles().add(userRoless.get(i).getRole());
+        for (UserRoles userRoles : userRoless) {
+            user.getRoles().add(userRoles.getRole());
         }
         return user;
     }
