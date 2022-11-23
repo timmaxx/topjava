@@ -12,7 +12,30 @@
     <h2><spring:message code="meal.create" var="mealCreate"/><spring:message code="meal.edit" var="mealEdit"/>
         ${meal.id == null ? mealCreate : mealEdit}
     </h2>
-    <form method="post" action="${meal.id == null ? "/meals/create" : "/meals/update/{meal.id}"}">
+
+    <%-- 1й вариант (работает) --%>
+    <form method="post" action="${meal.id == null ? "../meals/create" : "../../meals/update/{meal.id}"}">
+
+    <%-- Варианты ниже (с применением пути относительно контекста) не запустились.
+    --%>
+
+    <%-- 2й вариант (не работает) --%>
+<%--
+    <"../meals/create" var="pathForMealCreate"/><"../../meals/update/{meal.id}" var="pathForMealEdit"/>
+    <form method="post" action="${meal.id == null ? pathForMealCreate : pathForMealEdit}">
+--%>
+
+    <%-- 3й вариант (не работает) --%>
+<%--
+    <c:set var="pathForMealCreate" value="<c:url value="/meals/create"/>"/>
+    <c:set var="pathForMealEdit" value="<c:url value=\"/meals/update/{meal.id}\"/>"/>
+    <form method="post" action="${meal.id == null ? pathForMealCreate : pathForMealEdit}">
+--%>
+
+    <%-- 4й вариант (не работает) --%>
+<%--
+    <form method="post" action="${meal.id == null ? "${pageContext.request.contextPath}/meals/create" : "${pageContext.request.contextPath}/meals/update/{meal.id}"}">
+--%>
         <input type="hidden" name="id" value="${meal.id}">
         <dl>
             <dt><spring:message code="meal.dateTime"/>:</dt>

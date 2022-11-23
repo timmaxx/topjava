@@ -13,7 +13,18 @@
 <section>
     <hr/>
     <h2><spring:message code="meal.title"/></h2>
-    <form method="get" action="/meals/filter">
+
+    <%-- Здесь и далее представлены несколько вариантов работы со ссылками --%>
+    <%--<form method="get" action="${pageContext.request.contextPath}/meals/filter">--%>
+    <%--<form method="get" action="<spring:url value="/meals/filter"/>">--%>
+    <form method="get" action='<c:url value="/meals/filter"/>'>
+    <%-- IDEA считает, что есть ошибка для всех вариантов <c:url ...> (но приложение работает).
+         Не хватает какой-то интеграции?
+         Конкретно на этих строках пишет:
+            Error:(20, 47) Cannot resolve directory 'meals'
+            Error:(20, 53) Cannot resolve file 'filter'
+    --%>
+
         <dl>
             <dt><spring:message code="meal.startDate"/>:</dt>
             <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
@@ -34,11 +45,11 @@
     </form>
     <hr/>
 
-    <!-- ToDo: А можно было-бы сделать и так:
-    1. запись в модель новый Meal.
-    2. пост-запрос на /meals/create.
-    -->
-    <a href="/meals/create"><spring:message code="meal.add"/></a>
+    <%--<a href="${pageContext.request.contextPath}/meals/create"> --%>
+    <%--<a href="<spring:url value="/meals/create"/>"> --%>
+    <a href='<c:url value="/meals/create"/>'>
+
+        <spring:message code="meal.add"/></a>
 
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
@@ -63,16 +74,13 @@
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
 
-                <!-- ToDo: А можно было-бы сделать и так:
-                1. запись в модель новый Meal.
-                2. пост-запрос на /meals/update.
-                -->
-                <td><a href="/meals/update/${meal.id}"><spring:message code="common.update"/></a></td>
+                <%--<td><a href="${pageContext.request.contextPath}/meals/update/${meal.id}"><spring:message code="common.update"/></a></td>--%>
+                <%--<td><a href="<spring:url value="/meals/update/${meal.id}"/>"><spring:message code="common.update"/></a></td>--%>
+                <td><a href='<c:url value="/meals/update/${meal.id}"/>'><spring:message code="common.update"/></a></td>
 
-                <!-- ToDo: А можно было-бы сделать и так:
-                1. пост-запрос на /meals/delete.
-                -->
-                <td><a href="/meals/delete/${meal.id}"><spring:message code="common.delete"/></a></td>
+                <%--<td><a href="${pageContext.request.contextPath}/meals/delete/${meal.id}"><spring:message code="common.delete"/></a></td>--%>
+                <%--<td><a href="<spring:url value="/meals/delete/${meal.id}"/>"><spring:message code="common.delete"/></a></td>--%>
+                <td><a href='<c:url value="/meals/delete/${meal.id}"/>'><spring:message code="common.delete"/></a></td>
             </tr>
         </c:forEach>
     </table>
