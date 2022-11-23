@@ -152,12 +152,12 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         List<User> all = service.getAll();
         USER_MATCHER.assertMatch(all, admin, guest, user);
     }
+    // Также, читать это:
+    // https://stackoverflow.com/questions/17814372/jpa-2-0-disable-session-cache-for-unit-tests/58963737#58963737
 */
 
     @Test
     public void createWithException() throws Exception {
-        // Поскольку валидация сделана и для jdbc, то этот тест тоже должен проходить.
-        // if (isJdbcProfileSet()) { return; }
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.USER)));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "  ", "password", Role.USER)));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "mail@yandex.ru", "  ", Role.USER)));
