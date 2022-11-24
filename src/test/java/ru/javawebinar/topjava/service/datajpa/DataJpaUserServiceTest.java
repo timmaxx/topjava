@@ -18,8 +18,23 @@ public class DataJpaUserServiceTest extends AbstractUserServiceTest {
     @Test
     public void getWithMeals() {
         User user = service.getWithMeals(USER_ID);
+        System.out.println( "user = " + user);
+        System.out.println( "UserTestData.user = " + UserTestData.user);
         USER_MATCHER.assertMatch(user, UserTestData.user);
+        System.out.println( "user.getMeals() = " + user.getMeals());
+        System.out.println( "MealTestData.meals = " + MealTestData.meals);
         MEAL_MATCHER.assertMatch(user.getMeals(), MealTestData.meals);
+    }
+
+    @Test
+    public void getWithMealsForUserWith2Roles() {
+        User user = service.getWithMeals(ADMIN_ID);
+        System.out.println( "user = " + user);
+        System.out.println( "UserTestData.admin = " + UserTestData.admin);
+        USER_MATCHER.assertMatch(user, UserTestData.admin);
+        System.out.println( "user.getMeals() = " + user.getMeals());
+        System.out.println( "MealTestData.adminMeals = " + MealTestData.adminMeals);
+        MEAL_MATCHER.assertMatch(user.getMeals(), MealTestData.adminMeals);
     }
 
     @Test
