@@ -14,10 +14,9 @@
     </h2>
 
     <%-- 1й вариант (работает) --%>
+<%--
     <form method="post" action="${meal.id == null ? "../meals/create" : "../../meals/update/{meal.id}"}">
-
-    <%-- Варианты ниже (с применением пути относительно контекста) не запустились.
-    --%>
+--%>
 
     <%-- 2й вариант (не работает) --%>
 <%--
@@ -25,16 +24,14 @@
     <form method="post" action="${meal.id == null ? pathForMealCreate : pathForMealEdit}">
 --%>
 
-    <%-- 3й вариант (не работает) --%>
-<%--
-    <c:set var="pathForMealCreate" value="<c:url value="/meals/create"/>"/>
-    <c:set var="pathForMealEdit" value="<c:url value=\"/meals/update/{meal.id}\"/>"/>
-    <form method="post" action="${meal.id == null ? pathForMealCreate : pathForMealEdit}">
---%>
+    <%-- 3й вариант (работает) --%>
+    <c:set var="pathForMealCreate" value="/meals/create"/>
+    <c:set var="pathForMealEdit" value="/meals/update/${meal.id}"/>
+    <form method="post" action=<c:url value="${meal.id == null ? pathForMealCreate : pathForMealEdit}"/> >
 
-    <%-- 4й вариант (не работает) --%>
+    <%-- 4й вариант (работает) --%>
 <%--
-    <form method="post" action="${meal.id == null ? "${pageContext.request.contextPath}/meals/create" : "${pageContext.request.contextPath}/meals/update/{meal.id}"}">
+    <form method="post" action="${pageContext.request.contextPath}${meal.id == null ?  "/meals/create" : "/meals/update/"}${meal.id}">
 --%>
         <input type="hidden" name="id" value="${meal.id}">
         <dl>
