@@ -61,11 +61,10 @@ public class ValidationUtil {
 
     public static <T> void validateFields(T row) {
         Set<ConstraintViolation<T>> violations = validator.validate(row);
-        if (violations.size() == 0) {
-            return;
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(
+                    "Validation failed for classes [" + row.getClass().getName() + "]",
+                    violations);
         }
-        throw new ConstraintViolationException(
-                "Validation failed for classes [" + row.getClass().getName() + "]",
-                violations);
     }
 }
