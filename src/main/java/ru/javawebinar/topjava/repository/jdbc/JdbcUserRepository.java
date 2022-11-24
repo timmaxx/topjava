@@ -45,11 +45,6 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    // Сейчас, если валидация не пройдёт, то возбудится исключение ConstraintViolationException.
-    // Предполагал, что
-    // @Transactional(rollbackFor = ConstraintViolationException.class)
-    // приведёт к откату транзакции и в т.ч. по стеку исключений будет видно другое более раннее исключение
-    // ...RollBack..., но что-то так не получилось...
     @Transactional
     public User save(User user) {
         validateFields(user);
