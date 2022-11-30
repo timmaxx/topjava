@@ -12,4 +12,15 @@
     <import resource="spring-cache.xml"/>
 
     <context:component-scan base-package="ru.javawebinar.**.service"/>
+
+    <!-- Не работает (при тестировании) -->
+    <bean id="conversionService"
+          class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="ru.javawebinar.topjava.web.meal.StringToLocalDate"/>
+                <bean class="ru.javawebinar.topjava.web.meal.StringToLocalTime"/>
+            </set>
+        </property>
+    </bean>
 </beans>

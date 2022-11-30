@@ -65,6 +65,20 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
     // Для задания 3.
     @Test
+    void getBetweenWithoutArgs() throws Exception {
+        perform(MockMvcRequestBuilders
+                // The most common ISO Date Format yyyy-MM-dd — for example, "2000-10-31".
+                // The most common ISO Time Format HH:mm:ss.SSSXXX — for example, "01:30:00.000-05:00".
+                .get(REST_URL + "filter")
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MEAL_TO_MATCHER.contentJson(
+                        MealsUtil.getTos(meals , SecurityUtil.authUserCaloriesPerDay())));
+    }
+
+    @Test
     void getBetween() throws Exception {
         perform(MockMvcRequestBuilders
                 // The most common ISO Date Format yyyy-MM-dd — for example, "2000-10-31".
