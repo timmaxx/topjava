@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.web;
 
 import org.assertj.core.matcher.AssertionMatcher;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.MealTo;
@@ -37,6 +38,8 @@ class RootControllerTest extends AbstractControllerTest {
                 ));
     }
 
+
+    // Вариант 1
     @Test
     void getMeals() throws Exception {
         perform(get("/meals"))
@@ -54,5 +57,41 @@ class RootControllerTest extends AbstractControllerTest {
                             }
                         }
                 ));
+    }
+
+    /*
+    // Вариант 2
+    // 7: Попробуйте в RootControllerTest.getMeals сделать сравнение через model().attribute("meals", expectedValue).
+    // Учтите, что вывод результатов через toString к сравнению отношения не имеет.
+
+    // Не пойму, в чём подвох: посимвольно все элементы в выводе toString одинаковы, в toString для MealTo печатаются все поля...
+    @Test
+    void getMeals() throws Exception {
+        perform(get("/meals"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(view().name("meals"))
+            .andExpect(forwardedUrl("/WEB-INF/jsp/meals.jsp"))
+            .andExpect(model().attribute(
+                    "meals",
+                    MealsUtil.getTos(MealTestData.meals ,SecurityUtil.authUserCaloriesPerDay())));
+    }
+    */
+
+
+    // Пытался сузить до одной записи.
+    // Здесь одна и та же единственная еда в каждом из списков. Что не так?
+    @Test
+    void getMeals100003() throws Exception {
+        ResultActions resultActions = perform(get("/meals/filter?endDate=2020-01-30&endTime=11:00"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("meals"))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/meals.jsp"))
+                ;
+
+        resultActions.andExpect(model().attribute(
+                        "meals",
+                        MealsUtil.getTos(List.of(meal1) ,SecurityUtil.authUserCaloriesPerDay())));
     }
 }
