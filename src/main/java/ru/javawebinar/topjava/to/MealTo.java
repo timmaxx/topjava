@@ -3,15 +3,20 @@ package ru.javawebinar.topjava.to;
 import java.time.LocalDateTime;
 
 public class MealTo {
-    private final Integer id;
+    // Сделал пустой конструктор. А следовательно и поля сделал не final.
+    // Это всё для разрешения "Invalid read array from JSON".
+    // Или был другой путь?
+    private /*final*/ Integer id;
 
-    private final LocalDateTime dateTime;
+    private /*final*/ LocalDateTime dateTime;
 
-    private final String description;
+    private /*final*/ String description;
 
-    private final int calories;
+    private /*final*/ int calories;
 
-    private final boolean excess;
+    private /*final*/ boolean excess;
+
+    public MealTo() {}
 
     public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
         this.id = id;
