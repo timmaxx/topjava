@@ -1,7 +1,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:p="http://www.springframework.org/schema/p" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
@@ -49,4 +50,25 @@
         <property name="basenames" value="file:///#{systemEnvironment[TOPJAVA_ROOT]}/config/messages/app"/>
         <property name="fallbackToSystemLocale" value="false"/>
     </bean>
+
+
+    <!-- Начало. Не работает (при тестировании) -->
+    <!-- Без этого блока не работает только MealRestController::getBetween
+           (т.к. конвертация из String в LocalDate и из String в LocalTime не включена).
+         Но с таким блоком начинает работать MealRestController::getBetween, но ломаются get и createWithLocation
+           (бесконечная рекурсия) и getBetween22() (вероятно потому, что более приоритетно нужно попытаться преобразовать
+           строку в LocalDate или LocalTime, а на @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) не обращатся внимание).
+    -->
+    <mvc:annotation-driven conversion-service="conversionService"/>
+    <bean id="conversionService"
+          class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="ru.javawebinar.topjava.web.meal.StringToLocalDate"/>
+                <bean class="ru.javawebinar.topjava.web.meal.StringToLocalTime"/>
+            </set>
+        </property>
+    </bean>
+    <!-- Конец. Не работает (при тестировании) -->
+
 </beans>
