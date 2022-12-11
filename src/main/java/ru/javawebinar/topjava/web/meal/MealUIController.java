@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 
 import java.time.LocalDate;
@@ -13,6 +14,12 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/profile/meals", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MealUIController extends AbstractMealController {
+
+    @Override
+    @GetMapping("/{id}")
+    public Meal get(@PathVariable int id) {
+        return super.get(id);
+    }
 
     @Override
     @GetMapping
@@ -27,10 +34,23 @@ public class MealUIController extends AbstractMealController {
         super.delete(id);
     }
 
+/*
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void create(MealTo mealTo) {
         super.create(mealTo);
+    }
+*/
+    @PostMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void createOrUpdate(MealTo mealTo) {
+        System.out.println("MealUIController::createOrUpdate(MealTo mealTo)");
+        System.out.println("mealTo = " + mealTo);
+        if (mealTo.isNew()) {
+            super.create(mealTo);
+        } else {
+            super.update(mealTo, mealTo.id());
+        }
     }
 
     @Override
