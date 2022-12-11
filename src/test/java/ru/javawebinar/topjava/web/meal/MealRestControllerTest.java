@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.to.MealToForIU;
 import ru.javawebinar.topjava.util.MealUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
@@ -47,26 +48,15 @@ class MealRestControllerTest extends AbstractControllerTest {
         assertThrows(NotFoundException.class, () -> mealService.get(MEAL1_ID, USER_ID));
     }
 
-/*
     @Test
     void update() throws Exception {
-        Meal updated = getUpdated();
+        MealToForIU updatedToForIU = MealUtil.createToForIU(getUpdated());
         perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                .content(JsonUtil.writeValue(updatedToForIU)))
                 .andExpect(status().isNoContent());
 
-        MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, USER_ID), updated);
+        MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, USER_ID), MealUtil.updateFromToForIU(new Meal(meal1), updatedToForIU));
     }
-*/
-    @Test
-    void update() throws Exception {
-        MealTo updatedTo = MealUtil.createTo(getUpdated(), false);
-        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updatedTo)))
-                .andExpect(status().isNoContent());
-
-        MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, USER_ID), MealUtil.updateFromTo(new Meal(meal1), updatedTo));
-}
 
     @Test
     void createWithLocation() throws Exception {

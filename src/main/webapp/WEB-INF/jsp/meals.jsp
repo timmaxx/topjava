@@ -64,6 +64,7 @@
             </thead>
             <c:forEach items="${requestScope.meals}" var="meal">
                 <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTo"/>
+                <%--<jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealToForIU"/>--%>
                 <tr data-meal-excess="${meal.excess}">
                     <td>
                             <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>
@@ -84,6 +85,7 @@
 <div class="modal fade" tabindex="-1" id="editRow">
     <div class="modal-dialog">
         <div class="modal-content">
+            <jsp:useBean id="mealToForIU" type="ru.javawebinar.topjava.to.MealToForIU"/>
             <div class="modal-header">
                 <h4 class="modal-title" id="modalTitle"><spring:message code="meal.add"/></h4>
                 <button type="button" class="close" data-dismiss="modal" onclick="closeNoty()">&times;</button>

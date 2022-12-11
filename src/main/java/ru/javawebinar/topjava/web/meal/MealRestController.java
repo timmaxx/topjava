@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.to.MealToForIU;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -38,22 +39,13 @@ public class MealRestController extends AbstractMealController {
         return super.getAll();
     }
 
-/*
     @Override
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Meal meal, @PathVariable int id) {
-        super.update(meal, id);
-    }
-*/
-    @Override
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody MealTo mealTo, @PathVariable int id) {
-        System.out.println("MealRestController::update(@RequestBody MealTo mealTo, @PathVariable int id)");
-        System.out.println("mealTo =" + mealTo);
-        System.out.println("id = " + id);
-        super.update(mealTo, id);
+    public void update(
+            @RequestBody MealToForIU mealToForIU,
+            @PathVariable int id) {
+        super.update(mealToForIU, id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

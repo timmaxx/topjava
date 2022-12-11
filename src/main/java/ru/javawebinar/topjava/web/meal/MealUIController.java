@@ -2,14 +2,19 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.to.MealToForIU;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/profile/meals", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -43,14 +48,21 @@ public class MealUIController extends AbstractMealController {
 */
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void createOrUpdate(MealTo mealTo) {
-        System.out.println("MealUIController::createOrUpdate(MealTo mealTo)");
-        System.out.println("mealTo = " + mealTo);
-        if (mealTo.isNew()) {
-            super.create(mealTo);
-        } else {
-            super.update(mealTo, mealTo.id());
+    public ResponseEntity<String> createOrUpdate(
+            @Valid MealToForIU mealToForIU,
+            BindingResult result) {
+        if (result.hasErrors()) {
+            String errorFieldsMsg = result.getFieldErrors().stream()
+                    .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
+                    .collect(Collectors.joining("<br>"));
+            return ResponseEntity.unprocessableEntity().body(errorFieldsMsg);
         }
+        if (mealToForIU.isNew()) {
+            super.create(mealToForIU);
+        } else {
+            super.update(mealToForIU, mealToForIU.id());
+        }
+        return ResponseEntity.ok().build();
     }
 
     @Override

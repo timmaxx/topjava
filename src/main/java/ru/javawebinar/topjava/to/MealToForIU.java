@@ -9,7 +9,7 @@ import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class MealTo extends BaseTo {
+public class MealToForIU extends BaseTo {
 
     @NotNull
     private final LocalDateTime dateTime;
@@ -22,15 +22,12 @@ public class MealTo extends BaseTo {
     @Range(min = 10, max = 10000)
     private final int calories;
 
-    private final boolean excess;
-
-    @ConstructorProperties({"id", "dateTime", "description", "calories", "excess"})
-    public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
+    @ConstructorProperties({"id", "dateTime", "description", "calories"})
+    public MealToForIU(Integer id, LocalDateTime dateTime, String description, int calories) {
         super(id);
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
-        this.excess = excess;
     }
 
     public LocalDateTime getDateTime() {
@@ -45,35 +42,29 @@ public class MealTo extends BaseTo {
         return calories;
     }
 
-    public boolean isExcess() {
-        return excess;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MealTo mealTo = (MealTo) o;
-        return calories == mealTo.calories &&
-                excess == mealTo.excess &&
-                Objects.equals(id, mealTo.id) &&
-                Objects.equals(dateTime, mealTo.dateTime) &&
-                Objects.equals(description, mealTo.description);
+        MealToForIU mealToForIU = (MealToForIU) o;
+        return calories == mealToForIU.calories &&
+                Objects.equals(id, mealToForIU.id) &&
+                Objects.equals(dateTime, mealToForIU.dateTime) &&
+                Objects.equals(description, mealToForIU.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, dateTime, description, calories, excess);
+        return Objects.hash(id, dateTime, description, calories);
     }
 
     @Override
     public String toString() {
-        return "MealTo{" +
+        return "MealToForIU{" +
                 "id=" + id +
                 ", dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
-                ", excess=" + excess +
                 '}';
     }
 }

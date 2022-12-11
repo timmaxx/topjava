@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.to.MealToForIU;
 import ru.javawebinar.topjava.util.MealUtil;
 
 import java.time.LocalDate;
@@ -57,9 +57,9 @@ public class MealService {
         }
     */
     @Transactional
-    public void update(MealTo mealTo, int userId) {
-        Meal meal = get(mealTo.id(), userId);
-        Meal updatedMeal = MealUtil.updateFromTo(meal, mealTo);
+    public void update(MealToForIU mealToForIU, int userId) {
+        Meal meal = get(mealToForIU.id(), userId);
+        Meal updatedMeal = MealUtil.updateFromToForIU(meal, mealToForIU);
         repository.save(updatedMeal, userId); // !! need only for JDBC implementation:
     }
 

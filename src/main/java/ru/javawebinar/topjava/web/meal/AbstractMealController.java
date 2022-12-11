@@ -7,6 +7,7 @@ import org.springframework.lang.Nullable;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.to.MealToForIU;
 import ru.javawebinar.topjava.util.MealUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
@@ -48,11 +49,11 @@ public abstract class AbstractMealController {
         return service.create(meal, userId);
     }
 
-    public void create(MealTo mealTo) {
+    public void create(MealToForIU mealToForIU) {
         int userId = SecurityUtil.authUserId();
-        log.info("create {} for user {}", mealTo, userId);
-        checkNew(mealTo);
-        service.create(MealUtil.createNewFromTo(mealTo), userId);
+        log.info("create {} for user {}", mealToForIU, userId);
+        checkNew(mealToForIU);
+        service.create(MealUtil.createNewFromToForIU(mealToForIU), userId);
     }
 
     public void update(Meal meal, int id) {
@@ -62,21 +63,21 @@ public abstract class AbstractMealController {
         service.update(meal, userId);
     }
 
-    public void update(MealTo mealTo, int id) {
+    public void update(MealToForIU mealToForIU, int id) {
         int userId = SecurityUtil.authUserId();
-        log.info("update {} for user {}", mealTo, userId);
-        assureIdConsistent(mealTo, id);
-        service.update(MealUtil.createNewFromTo(mealTo), userId);
+        log.info("update {} for user {}", mealToForIU, userId);
+        assureIdConsistent(mealToForIU, id);
+        service.update(MealUtil.createNewFromToForIU(mealToForIU), userId);
     }
-
     /**
      * <ol>Filter separately
      * <li>by date</li>
      * <li>by time for every date</li>
      * </ol>
      */
-    public List<MealTo> getBetween(@Nullable LocalDate startDate, @Nullable LocalTime startTime,
-                                            @Nullable LocalDate endDate, @Nullable LocalTime endTime) {
+    public List<MealTo> getBetween(
+            @Nullable LocalDate startDate, @Nullable LocalTime startTime,
+            @Nullable LocalDate endDate, @Nullable LocalTime endTime) {
         int userId = SecurityUtil.authUserId();
         log.info("getBetween dates({} - {}) time({} - {}) for user {}", startDate, endDate, startTime, endTime, userId);
 
