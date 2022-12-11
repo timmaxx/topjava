@@ -7,7 +7,7 @@ import org.springframework.lang.Nullable;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.util.MealUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
@@ -38,7 +38,7 @@ public abstract class AbstractMealController {
     public List<MealTo> getAll() {
         int userId = SecurityUtil.authUserId();
         log.info("getAll for user {}", userId);
-        return MealsUtil.getTos(service.getAll(userId), SecurityUtil.authUserCaloriesPerDay());
+        return MealUtil.getTos(service.getAll(userId), SecurityUtil.authUserCaloriesPerDay());
     }
 
     public Meal create(Meal meal) {
@@ -52,7 +52,7 @@ public abstract class AbstractMealController {
         int userId = SecurityUtil.authUserId();
         log.info("create {} for user {}", mealTo, userId);
         checkNew(mealTo);
-        service.create(MealsUtil.createNewFromTo(mealTo), userId);
+        service.create(MealUtil.createNewFromTo(mealTo), userId);
     }
 
     public void update(Meal meal, int id) {
@@ -66,7 +66,7 @@ public abstract class AbstractMealController {
         int userId = SecurityUtil.authUserId();
         log.info("update {} for user {}", mealTo, userId);
         assureIdConsistent(mealTo, id);
-        service.update(MealsUtil.createNewFromTo(mealTo), userId);
+        service.update(MealUtil.createNewFromTo(mealTo), userId);
     }
 
     /**
@@ -81,6 +81,6 @@ public abstract class AbstractMealController {
         log.info("getBetween dates({} - {}) time({} - {}) for user {}", startDate, endDate, startTime, endTime, userId);
 
         List<Meal> mealsDateFiltered = service.getBetweenInclusive(startDate, endDate, userId);
-        return MealsUtil.getFilteredTos(mealsDateFiltered, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime);
+        return MealUtil.getFilteredTos(mealsDateFiltered, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime);
     }
 }
