@@ -55,10 +55,37 @@ public class MealUIController extends AbstractMealController {
                     .collect(Collectors.joining("<br>"));
             return ResponseEntity.unprocessableEntity().body(errorFieldsMsg);
         }
-        if (mealToForIU.isNew()) {
-            super.create(mealToForIU);
-        } else {
-            super.update(mealToForIU, mealToForIU.id());
+
+        try {
+            // Если валидация по полям прошла успешно, то пробуем вставить или обновить.
+            // Но!!!
+            // Если в процессе вставки/обновления нарушится какое-либо ограничение БД
+            // (например я попытался внести еду с датой/временем уже имеющейся у пользователя),
+            // то на клиента не поступит текст этого исключения.
+            // Т.е. на клиенте будет видно: "Ошибка 500". Что совсем не информативно!
+            // В логе вполне вразумительно написано:
+            // 16:21:15.883 ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper.logExceptions:142 - ОШИБКА: повторяющееся значение ключа нарушает ограничение уникальности "meals_unique_user_datetime_idx"
+            //  Detail: Ключ "(user_id, date_time)=(100000, 2020-01-31 00:00:00)" уже существует.
+            if (mealToIU.isNew()) {
+                super.create(mealToIU);
+            } else {
+                super.update(mealToIU, mealToIU.id());
+            }
+        } catch (org.springframework.dao.DataIntegrityViolationException dive) {
+            // Исключения, которые попробовал ловить:
+            // org.hibernate.exception.ConstraintViolationException --
+            // javax.validation.ConstraintViolationException --
+            // org.springframework.dao.DataIntegrityViolationException ++
+            // NestedServletException --
+            // InvocationTargetException --
+            /*
+            System.out.println("1 " + dive);
+            System.out.println("2 " + dive.getCause());
+            System.out.println("3 " + dive.getRootCause());
+            System.out.println("4 " + dive.getMostSpecificCause());
+            return ResponseEntity.unprocessableEntity().body(dive.getMessage());
+            */
+            return ResponseEntity.unprocessableEntity().body(dive.getMostSpecificCause().toString());
         }
         return ResponseEntity.ok().build();
     }
