@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.to.MealToForIU;
+import ru.javawebinar.topjava.to.MealToIU;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -22,12 +22,14 @@ public class MealUIController extends AbstractMealController {
 
     @Override
     @GetMapping("/{id}")
+    // Для выборки одной записи используем Meal.
     public Meal get(@PathVariable int id) {
         return super.get(id);
     }
 
     @Override
     @GetMapping
+    // Для выборки нескольких записей используем MealTo.
     public List<MealTo> getAll() {
         return super.getAll();
     }
@@ -39,19 +41,15 @@ public class MealUIController extends AbstractMealController {
         super.delete(id);
     }
 
-/*
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void create(MealTo mealTo) {
-        super.create(mealTo);
-    }
-*/
-    @PostMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    // Для вставки или обновления одной записи используем MealToIU.
     public ResponseEntity<String> createOrUpdate(
-            @Valid MealToForIU mealToForIU,
+            @Valid MealToIU mealToIU,
             BindingResult result) {
+        // System.out.println("ResponseEntity<String> createOrUpdate( @Valid MealToIU mealToIU, BindingResult result)");
         if (result.hasErrors()) {
+            // System.out.println("result.hasErrors() = true");
             String errorFieldsMsg = result.getFieldErrors().stream()
                     .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
                     .collect(Collectors.joining("<br>"));
@@ -67,6 +65,7 @@ public class MealUIController extends AbstractMealController {
 
     @Override
     @GetMapping("/filter")
+    // Для выборки нескольких записей используем MealTo.
     public List<MealTo> getBetween(
             @RequestParam @Nullable LocalDate startDate,
             @RequestParam @Nullable LocalTime startTime,

@@ -2,7 +2,7 @@ package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.to.MealToForIU;
+import ru.javawebinar.topjava.to.MealToIU;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+// На начало HW09 класс имел имя MealsUtil. Это не единообразно с UserUtil. Переименовал.
 public class MealUtil {
 
     private MealUtil() {
@@ -38,22 +39,25 @@ public class MealUtil {
                 .toList();
     }
 
+    // В UserUtil подобный метод имеет имя asTo:
+    // public static UserTo asTo(User user)
+    // ToDo: лучше сделать единообразно.
     public static MealTo createTo(Meal meal, boolean excess) {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
 
-    public static MealToForIU createToForIU(Meal meal) {
-        return new MealToForIU(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories());
+    public static MealToIU createToIU(Meal meal) {
+        return new MealToIU(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories());
     }
 
-    public static Meal createNewFromToForIU(MealToForIU mealToForIU) {
-        return new Meal(null, mealToForIU.getDateTime(), mealToForIU.getDescription(), mealToForIU.getCalories());
+    public static Meal createNewFromToIU(MealToIU mealToIU) {
+        return new Meal(mealToIU.getId(), mealToIU.getDateTime(), mealToIU.getDescription(), mealToIU.getCalories());
     }
 
-    public static Meal updateFromToForIU(Meal meal, MealToForIU mealToForIU) {
-        meal.setDescription(mealToForIU.getDescription());
-        meal.setDateTime(mealToForIU.getDateTime());
-        meal.setCalories(mealToForIU.getCalories());
+    public static Meal updateFromToIU(Meal meal, MealToIU mealToIU) {
+        meal.setDescription(mealToIU.getDescription());
+        meal.setDateTime(mealToIU.getDateTime());
+        meal.setCalories(mealToIU.getCalories());
         return meal;
     }
 }

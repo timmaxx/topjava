@@ -8,8 +8,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.to.MealToForIU;
+import ru.javawebinar.topjava.to.MealToIU;
 import ru.javawebinar.topjava.util.MealUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
@@ -50,12 +49,12 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void update() throws Exception {
-        MealToForIU updatedToForIU = MealUtil.createToForIU(getUpdated());
+        MealToIU updatedToForIU = MealUtil.createToIU(getUpdated());
         perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedToForIU)))
                 .andExpect(status().isNoContent());
 
-        MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, USER_ID), MealUtil.updateFromToForIU(new Meal(meal1), updatedToForIU));
+        MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, USER_ID), MealUtil.updateFromToIU(new Meal(meal1), updatedToForIU));
     }
 
     @Test

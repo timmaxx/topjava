@@ -9,6 +9,10 @@ import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+// Этот класс нужен как отдельный DTO для передачи данных от сервера на браузер (клиент) для отображения (Select).
+// В нём присутствует поле "excess", которое является вычисляемым агрегированным по группе записей еда.
+// Есть отдельный класс для вставки и обновления MealToIU и именно для полей того класса установлены аннотации для валидации.
+// А если так, то нужны-ли такие аннотации в Meal и в MealTo?
 public class MealTo extends BaseTo {
 
     @NotNull
