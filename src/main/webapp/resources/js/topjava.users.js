@@ -27,6 +27,17 @@ function enable(chkbox, id) {
 $(function () {
     makeEditable(
         $("#datatable").DataTable({
+            language: {
+                // Интернационализация
+                // https://datatables.net/manual/i18n
+
+                // Вариант 1. Прямо здесь по ключевым фразам:
+                // search: "Поиск:",
+
+                // Вариант 2. По ссылке:
+                // https://datatables.net/plug-ins/i18n/Russian.html
+                url: i18n['common.i18nForDataTables']
+            },
             "ajax": {
                 "url": userAjaxUrl,
                 "dataSrc": ""

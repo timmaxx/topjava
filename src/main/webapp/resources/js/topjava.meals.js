@@ -21,18 +21,16 @@ $(function () {
     makeEditable(
         $("#datatable").DataTable({
             language: {
-                // Интернациолизация
+                // Интернационализация
                 // https://datatables.net/manual/i18n
 
                 // Вариант 1. Прямо здесь по ключевым фразам:
                 // search: "Поиск:",
 
-                // Вариант 2. Безусловный перевод на русский:
+                // Вариант 2. По ссылке:
                 // https://datatables.net/plug-ins/i18n/Russian.html
-                url: '//cdn.datatables.net/plug-ins/1.13.1/i18n/ru.json'
-                // А как это сделать в общем виде? Т.е. что-бы от настройки консоли браузера зависело?
+                url: i18n['common.i18nForDataTables']
             },
-
             "ajax": {
                 "url": mealAjaxUrl,
                 "dataSrc": ""
