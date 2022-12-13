@@ -5,12 +5,20 @@
   Есть вопрос по интернационализации:
   1. Я в Хроме установил плагин Locale Switcher. Для отображения пользователю он работает.
      Но когда я переключился на английскую локаль и пытаюсь через контектсное меню выбрать
-     "Просмотр кода страницы", то показывается html, где всё ппрописано по русской локали.
+     "Просмотр кода страницы", то показывается html, где всё прописано по русской локали.
      Это специфика этого плагина?
+     Ответ: Locale Switcher по F5 и Shift+F5 делает запросы с разными заголовками.
+     На просмотр кода делает с Content-Language: ru.
+     Т.е. это его бага или фича.
 --%>
 
 <script type="text/javascript">
-  <c:forEach var="key" items='<%=new String[]{"common.deleted","common.saved","common.enabled","common.disabled","common.errorStatus","common.confirm", "common.i18nForDataTables"}%>'>
-    i18n["${key}"] = "<spring:message code="${key}"/>";
-  </c:forEach>
+    const i18n = [];
+    <c:forEach var="key" items='<%=new String[]{"common.deleted","common.saved","common.enabled","common.disabled","common.errorStatus","common.confirm", "common.i18nForDataTables"}%>'>
+        i18n["${key}"] = "<spring:message code="${key}"/>";
+    </c:forEach>
+/*
+    i18n["addTitle"] = ${param.addTitle};
+    i18n["editTitle"] = "${param.editTitle}";
+*/
 </script>

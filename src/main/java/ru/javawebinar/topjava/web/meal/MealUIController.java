@@ -55,7 +55,7 @@ public class MealUIController extends AbstractMealController {
                     .collect(Collectors.joining("<br>"));
             return ResponseEntity.unprocessableEntity().body(errorFieldsMsg);
         }
-
+/*
         try {
             // Если валидация по полям прошла успешно, то пробуем вставить или обновить.
             // Но!!!
@@ -78,15 +78,20 @@ public class MealUIController extends AbstractMealController {
             // org.springframework.dao.DataIntegrityViolationException ++
             // NestedServletException --
             // InvocationTargetException --
-            /*
-            System.out.println("1 " + dive);
-            System.out.println("2 " + dive.getCause());
-            System.out.println("3 " + dive.getRootCause());
-            System.out.println("4 " + dive.getMostSpecificCause());
-            return ResponseEntity.unprocessableEntity().body(dive.getMessage());
-            */
+            // System.out.println("1 " + dive);
+            // System.out.println("2 " + dive.getCause());
+            // System.out.println("3 " + dive.getRootCause());
+            // System.out.println("4 " + dive.getMostSpecificCause());
             return ResponseEntity.unprocessableEntity().body(dive.getMostSpecificCause().toString());
         }
+*/
+        // Пока вариант без обработки исключений из-за ошибок целостности, произошедших на сервере.
+        if (mealToIU.isNew()) {
+            super.create(mealToIU);
+        } else {
+            super.update(mealToIU, mealToIU.id());
+        }
+
         return ResponseEntity.ok().build();
     }
 

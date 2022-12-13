@@ -48,8 +48,7 @@ public class MealService {
 
     @Transactional
     public void update(MealToIU mealToIU, int userId) {
-        Meal meal = get(mealToIU.id(), userId);
-        Meal updatedMeal = MealUtil.updateFromToIU(meal, mealToIU);
+        Meal updatedMeal = MealUtil.createNewFromToIU(mealToIU);
         repository.save(updatedMeal, userId); // !! need only for JDBC implementation:
     }
 

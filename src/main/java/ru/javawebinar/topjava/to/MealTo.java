@@ -1,29 +1,20 @@
 package ru.javawebinar.topjava.to;
 
-import org.hibernate.validator.constraints.Range;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 // Этот класс нужен как отдельный DTO для передачи данных от сервера на браузер (клиент) для отображения (Select).
 // В нём присутствует поле "excess", которое является вычисляемым агрегированным по группе записей еда.
-// Есть отдельный класс для вставки и обновления MealToIU и именно для полей того класса установлены аннотации для валидации.
-// А если так, то нужны-ли такие аннотации в Meal и в MealTo?
+// Есть отдельный класс для вставки и обновления MealToIU (Insert, Update) и именно для полей того класса установлены
+// аннотации для валидации.
+// В этом классе аннотации валидации удалены. Но в Meal оставлены для валидации перед сохранением (pre-persist).
 public class MealTo extends BaseTo {
 
-    @NotNull
     private final LocalDateTime dateTime;
 
-    @NotBlank
-    @Size(min = 2, max = 120)
     private final String description;
 
-    @NotNull
-    @Range(min = 10, max = 10000)
     private final int calories;
 
     private final boolean excess;

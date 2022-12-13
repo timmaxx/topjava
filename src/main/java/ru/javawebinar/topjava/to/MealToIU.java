@@ -9,10 +9,11 @@ import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-// Этот класс нужен как отдельный DTO для приёма сервером от браузера для вставки (Insert) или обновления (Update).
+// Этот класс нужен как отдельный DTO для приёма сервером от браузера для вставки (Insert - I в имени класса) или
+// обновления (Update - U в имени класса).
 // В нём отсутствует поле "excess", которое было вычисляемым агрегированным по группе записей еда и нужно было для отображения на клиенте.
 public class MealToIU extends BaseTo {
-// Если именно для полей этого класса установлены аннотации для валидации, то нужны-ли такие аннотации в Meal и в MealTo?
+    // Здесь есть аннотации для валидации, и даже в Meal тоже есть, но в MealTo они удалены за ненадобностью.
     @NotNull
     private final LocalDateTime dateTime;
 
@@ -45,23 +46,6 @@ public class MealToIU extends BaseTo {
 
     public Integer getCalories() {
         return calories;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MealToIU mealToIU = (MealToIU) o;
-        return  // calories == mealToIU.calories &&
-                Objects.equals(calories, mealToIU.calories) &&
-                Objects.equals(id, mealToIU.id) &&
-                Objects.equals(dateTime, mealToIU.dateTime) &&
-                Objects.equals(description, mealToIU.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, dateTime, description, calories);
     }
 
     @Override
