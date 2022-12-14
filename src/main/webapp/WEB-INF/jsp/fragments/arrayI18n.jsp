@@ -17,8 +17,7 @@
     <c:forEach var="key" items='<%=new String[]{"common.deleted","common.saved","common.enabled","common.disabled","common.errorStatus","common.confirm", "common.i18nForDataTables"}%>'>
         i18n["${key}"] = "<spring:message code="${key}"/>";
     </c:forEach>
-/*
-    i18n["addTitle"] = ${param.addTitle};
-    i18n["editTitle"] = "${param.editTitle}";
-*/
+
+    i18n["addTitle"] = "<spring:message code="${param.addTitle}"/>";
+    i18n["editTitle"] = "<spring:message code="${param.editTitle}"/>";
 </script>

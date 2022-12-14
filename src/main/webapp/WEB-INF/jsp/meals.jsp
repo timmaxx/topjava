@@ -111,27 +111,8 @@
 </div>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
-
-<jsp:include page="fragments/arrayI18n.jsp"/>
-<script type="text/javascript">
-    i18n["addTitle"] = '<spring:message code="meal.add"/>';
-    i18n["editTitle"] = '<spring:message code="meal.edit"/>';
-</script>
-
-<%--
-<c:set var="addTitle" value='<spring:message code="meal.add"/>'/>
-<c:set var="editTitle" value='<spring:message code="meal.edit"/>'/>
 <jsp:include page="fragments/arrayI18n.jsp">
-    <jsp:param name="addTitle" value="${addTitle}"/>
-    <jsp:param name="editTitle" value='${editTitle}'/>
+    <jsp:param name="addTitle" value="meal.add"/>
+    <jsp:param name="editTitle" value="meal.edit"/>
 </jsp:include>
---%>
-
-<%--
-<jsp:include page="fragments/arrayI18n.jsp">
-    <jsp:param name="addTitle" value="<spring:message code='meal.add'/>"/>
-    <jsp:param name="editTitle" value='<spring:message code="meal.edit"/>'/>
-</jsp:include>
---%>
-
 </html>
