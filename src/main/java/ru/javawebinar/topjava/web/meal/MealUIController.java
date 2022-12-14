@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.to.MealToIU;
+import ru.javawebinar.topjava.util.Util;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/profile/meals", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -47,13 +47,8 @@ public class MealUIController extends AbstractMealController {
     public ResponseEntity<String> createOrUpdate(
             @Valid MealToIU mealToIU,
             BindingResult result) {
-        // System.out.println("ResponseEntity<String> createOrUpdate( @Valid MealToIU mealToIU, BindingResult result)");
         if (result.hasErrors()) {
-            // System.out.println("result.hasErrors() = true");
-            String errorFieldsMsg = result.getFieldErrors().stream()
-                    .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
-                    .collect(Collectors.joining("<br>"));
-            return ResponseEntity.unprocessableEntity().body(errorFieldsMsg);
+            return Util.buildResponseEntityFromBindingResult(result);
         }
 /*
         try {
@@ -85,7 +80,7 @@ public class MealUIController extends AbstractMealController {
             return ResponseEntity.unprocessableEntity().body(dive.getMostSpecificCause().toString());
         }
 */
-        // Пока вариант без обработки исключений из-за ошибок целостности, произошедших на сервере.
+        // Пока вариант без обработки исключений, возникших из-за ошибок целостности, произошедших на сервере.
         if (mealToIU.isNew()) {
             super.create(mealToIU);
         } else {
