@@ -43,11 +43,14 @@ public class MealService {
         checkNotFoundWithId(repository.save(meal, userId), meal.id());
     }
 
-/*  // Не нашёл, где используется метод.
+/*
+    // Забыл, где используется метод.
+    // Если его закомментировать, то тесты проходят.
+    // Но если он будет закомментирован, то что ???
     // ToDo: удалить потом.
     @Transactional
     public void update(MealToCreateUpdate mealToCreateUpdate, int userId) {
-        Meal updatedMeal = MealUtil.createNewFromToIU(mealToCreateUpdate);
+        Meal updatedMeal = MealUtil.createNewFromToCreateUpdate(mealToCreateUpdate);
         repository.save(updatedMeal, userId); // !! need only for JDBC implementation:
     }
 */
