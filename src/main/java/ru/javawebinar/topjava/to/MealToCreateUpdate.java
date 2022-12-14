@@ -7,12 +7,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 // Этот класс нужен как отдельный DTO для приёма сервером от браузера для вставки (Insert - I в имени класса) или
 // обновления (Update - U в имени класса).
 // В нём отсутствует поле "excess", которое было вычисляемым агрегированным по группе записей еда и нужно было для отображения на клиенте.
-public class MealToIU extends BaseTo {
+public class MealToCreateUpdate extends BaseTo {
     // Здесь есть аннотации для валидации, и даже в Meal тоже есть, но в MealTo они удалены за ненадобностью.
     @NotNull
     private final LocalDateTime dateTime;
@@ -29,7 +28,7 @@ public class MealToIU extends BaseTo {
     private final Integer calories;
 
     @ConstructorProperties({"id", "dateTime", "description", "calories"})
-    public MealToIU(Integer id, LocalDateTime dateTime, String description, Integer calories) {
+    public MealToCreateUpdate(Integer id, LocalDateTime dateTime, String description, Integer calories) {
         super(id);
         this.dateTime = dateTime;
         this.description = description;

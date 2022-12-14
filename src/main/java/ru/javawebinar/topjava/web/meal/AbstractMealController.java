@@ -7,7 +7,7 @@ import org.springframework.lang.Nullable;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.to.MealToIU;
+import ru.javawebinar.topjava.to.MealToCreateUpdate;
 import ru.javawebinar.topjava.util.MealUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
@@ -49,11 +49,11 @@ public abstract class AbstractMealController {
         return service.create(meal, userId);
     }
 
-    public void create(MealToIU mealToIU) {
+    public void create(MealToCreateUpdate mealToCreateUpdate) {
         int userId = SecurityUtil.authUserId();
-        log.info("create {} for user {}", mealToIU, userId);
-        checkNew(mealToIU);
-        service.create(MealUtil.createNewFromToIU(mealToIU), userId);
+        log.info("create {} for user {}", mealToCreateUpdate, userId);
+        checkNew(mealToCreateUpdate);
+        service.create(MealUtil.createNewFromToCreateUpdate(mealToCreateUpdate), userId);
     }
 
     public void update(Meal meal, int id) {
@@ -63,11 +63,11 @@ public abstract class AbstractMealController {
         service.update(meal, userId);
     }
 
-    public void update(MealToIU mealToIU, int id) {
+    public void update(MealToCreateUpdate mealToCreateUpdate, int id) {
         int userId = SecurityUtil.authUserId();
-        log.info("update {} for user {}", mealToIU, userId);
-        assureIdConsistent(mealToIU, id);
-        service.update(MealUtil.createNewFromToIU(mealToIU), userId);
+        log.info("update {} for user {}", mealToCreateUpdate, userId);
+        assureIdConsistent(mealToCreateUpdate, id);
+        service.update(MealUtil.createNewFromToCreateUpdate(mealToCreateUpdate), userId);
     }
     /**
      * <ol>Filter separately

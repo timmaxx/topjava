@@ -2,7 +2,7 @@ package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.to.MealToIU;
+import ru.javawebinar.topjava.to.MealToCreateUpdate;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -46,18 +46,22 @@ public class MealUtil {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
 
-    public static MealToIU createToIU(Meal meal) {
-        return new MealToIU(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories());
+    public static Meal createNewFromToCreateUpdate(MealToCreateUpdate mealToCreateUpdate) {
+        return new Meal(mealToCreateUpdate.getId(), mealToCreateUpdate.getDateTime(), mealToCreateUpdate.getDescription(), mealToCreateUpdate.getCalories());
     }
 
-    public static Meal createNewFromToIU(MealToIU mealToIU) {
-        return new Meal(mealToIU.getId(), mealToIU.getDateTime(), mealToIU.getDescription(), mealToIU.getCalories());
+    // Используется только в MealRestControllerTest::update()
+    // Может тогда его вынести в отдельный утилитный класс в ветку тестов?
+    public static MealToCreateUpdate createToCreateUpdate(Meal meal) {
+        return new MealToCreateUpdate(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories());
     }
 
-    public static Meal updateFromToIU(Meal meal, MealToIU mealToIU) {
-        meal.setDescription(mealToIU.getDescription());
-        meal.setDateTime(mealToIU.getDateTime());
-        meal.setCalories(mealToIU.getCalories());
+    // Используется только в MealRestControllerTest::update()
+    // Может тогда его вынести в отдельный утилитный класс в ветку тестов?
+    public static Meal updateFromToCreateUpdate(Meal meal, MealToCreateUpdate mealToCreateUpdate) {
+        meal.setDescription(mealToCreateUpdate.getDescription());
+        meal.setDateTime(mealToCreateUpdate.getDateTime());
+        meal.setCalories(mealToCreateUpdate.getCalories());
         return meal;
     }
 }

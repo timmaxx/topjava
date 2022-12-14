@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.to.MealToIU;
+import ru.javawebinar.topjava.to.MealToCreateUpdate;
 import ru.javawebinar.topjava.util.Util;
 
 import javax.validation.Valid;
@@ -45,7 +45,7 @@ public class MealUIController extends AbstractMealController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     // Для вставки или обновления одной записи используем MealToIU.
     public ResponseEntity<String> createOrUpdate(
-            @Valid MealToIU mealToIU,
+            @Valid MealToCreateUpdate mealToCreateUpdate,
             BindingResult result) {
         if (result.hasErrors()) {
             return Util.buildResponseEntityFromBindingResult(result);
@@ -81,10 +81,10 @@ public class MealUIController extends AbstractMealController {
         }
 */
         // Пока вариант без обработки исключений, возникших из-за ошибок целостности, произошедших на сервере.
-        if (mealToIU.isNew()) {
-            super.create(mealToIU);
+        if (mealToCreateUpdate.isNew()) {
+            super.create(mealToCreateUpdate);
         } else {
-            super.update(mealToIU, mealToIU.id());
+            super.update(mealToCreateUpdate, mealToCreateUpdate.id());
         }
 
         return ResponseEntity.ok().build();
