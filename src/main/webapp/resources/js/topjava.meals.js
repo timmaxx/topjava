@@ -1,5 +1,28 @@
 const mealAjaxUrl = "profile/meals/";
 
+/*
+jQuery('#endDate').datetimepicker({
+    startDate: '+1971/05/01'//or 1986/12/08
+});
+*/
+
+jQuery('#endDate').datetimepicker({
+    //format:'d.m.Y',
+    format:'Y-m-d',
+    timepicker: false,
+    lang: 'ru'
+    //mask: true // '9999/19/39 29:59' - digit is the maximum possible for a cell
+});
+
+/*
+jQuery(document).ready(function () {
+    'use strict';
+    jQuery('#endDate').datetimepicker({
+        timepicker: false,
+        mask: true // '9999/19/39 29:59' - digit is the maximum possible for a cell
+    });
+});
+*/
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
     ajaxUrl: mealAjaxUrl,
@@ -80,7 +103,6 @@ $(function () {
             "createdRow": function (row, data) {
                 $(row).attr("data-meal-excess", data.excess);
             }
-
         })
     );
 });

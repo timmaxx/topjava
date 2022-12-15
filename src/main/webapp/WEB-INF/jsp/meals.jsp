@@ -27,6 +27,7 @@
                             <input class="form-control" type="date" name="endDate" id="endDate">
 --%>
                             <input type="text" name="endDate" id="endDate">
+
                         </div>
                         <div class="offset-2 col-2">
                             <label for="startTime"><spring:message code="meal.startTime"/></label>
@@ -113,19 +114,6 @@
     </div>
 </div>
 <jsp:include page="fragments/footer.jsp"/>
-
-<script>
-    /*jslint browser:true*/
-    /*global jQuery, document*/
-    jQuery(document).ready(function () {
-        'use strict';
-        jQuery('#endDate').datetimepicker({
-            timepicker: false,
-            mask: true // '9999/19/39 29:59' - digit is the maximum possible for a cell
-        });
-    });
-</script>
-
 </body>
 <jsp:include page="fragments/arrayI18n.jsp">
     <jsp:param name="addTitle" value="meal.add"/>
