@@ -24,7 +24,16 @@ public class UserTo extends BaseTo implements Serializable {
     private String email;
 
     @NotBlank
-    @Size(min = 5, max = 32, message = "length must be between 5 and 32 characters")
+    // Если вводить параметр message (как здесь), то в русской локации он не переводится.
+    // Сейчас убрал здесь параметр message и он переводится фреймворком.
+    // 1. А как тогда здесь задавать тексты сообщений для разных языков?
+    // 2. На демо-проекте я вижу, что фразы на русском отличаются от нашего, например:
+    //    На демо: Размер [Пароль] должен быть между 5 и 32
+    //    В нашем проекте: [password] size must be between 5 and 32
+    // 2.1. Т.е. отличается и построение фразы.
+    // 2.2. и имена полей переведены, а в нашем проекте они не переводятся. Их тоже переводить нужно как-то?
+    // @Size(min = 5, max = 32, message = "length must be between 5 and 32 characters")
+    @Size(min = 5, max = 32)
     private String password;
 
     @Range(min = 10, max = 10000)

@@ -7,7 +7,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.transaction.TransactionSystemException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,57 +27,63 @@ import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
 public class ExceptionInfoHandler {
     private static final Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
-/*
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ErrorInfo handleConstraintViolationException(
-            HttpServletRequest req, ConstraintViolationException e) {
-        return logAndGetErrorInfo(req, e, true, VALIDATION_ERROR); // true - временно
-    }
-*/
 
-    // org.springframework.transaction.TransactionSystemException
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(TransactionSystemException.class)
-    public ErrorInfo handleTransactionSystemException(
-            HttpServletRequest req, TransactionSystemException e) {
-        return logAndGetErrorInfo(req, e, true, VALIDATION_ERROR); // true - временно
+    @ExceptionHandler(BindException.class)
+    public ErrorInfo handleBindException(
+            HttpServletRequest req, BindException e) {
+        String messageForClient = ValidationUtil.getErrorMessagesForClient(e.getBindingResult());
+        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, messageForClient);
     }
 
     //  http://stackoverflow.com/a/22358422/548473
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(NotFoundException.class)
     public ErrorInfo handleError(HttpServletRequest req, NotFoundException e) {
-        return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND);
+        return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND, null);
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)  // 409
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
-        return logAndGetErrorInfo(req, e, true, DATA_ERROR);
+        // В messageForClient записывается фраза на русском вне зависимости от настройки локали клиента.
+        // Вероятно это из-за настройки локали сервера.
+        // Как её здесь переопределить?
+        // Пробовал и getLocalizedMessage() и getMessage().
+        String messageForClient = e.getMostSpecificCause().getLocalizedMessage();
+        return logAndGetErrorInfo(req, e, true, DATA_ERROR, messageForClient);
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
     @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
     public ErrorInfo illegalRequestDataError(HttpServletRequest req, Exception e) {
-        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
+        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, null);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorInfo handleError(HttpServletRequest req, Exception e) {
-        return logAndGetErrorInfo(req, e, true, APP_ERROR);
+        return logAndGetErrorInfo(req, e, true, APP_ERROR, null);
     }
 
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
-    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
+    private static ErrorInfo logAndGetErrorInfo(
+            HttpServletRequest req,
+            Exception e,
+            boolean logException,
+            ErrorType errorType,
+            String messageForClient) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
         if (logException) {
             log.error(errorType + " at request " + req.getRequestURL(), rootCause);
         } else {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
-        // return new ErrorInfo(req.getRequestURL(), errorType, rootCause.toString());
-        return new ErrorInfo(req.getRequestURL(), errorType, e.getMessage());
+
+        if (messageForClient == null || messageForClient.isEmpty()) {
+            return new ErrorInfo(req.getRequestURL(), errorType, e.getMessage());
+        } else {
+            return new ErrorInfo(req.getRequestURL(), errorType, messageForClient);
+        }
     }
 }

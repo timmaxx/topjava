@@ -2,12 +2,9 @@ package ru.javawebinar.topjava.web.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.TransactionSystemException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.UserTo;
-import ru.javawebinar.topjava.util.ValidationUtil;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -37,24 +34,12 @@ public class AdminUIController extends AbstractUserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void createOrUpdate(@Valid UserTo userTo, BindingResult result) {
-        if (result.hasErrors()) {
-            // TODO change to exception handler
-            String errorFieldsMsg = ValidationUtil.getErrorMessagesForClient(result);
-            System.out.println(errorFieldsMsg);
-            throw new TransactionSystemException(errorFieldsMsg);
-/*
-            String errorFieldsMsg = getErrorResponse(result);
-            return ResponseEntity.unprocessableEntity().body(errorFieldsMsg);
-*/
-        }
-        // catch (org.springframework.dao.DataIntegrityViolationException dive)
+    public void createOrUpdate(@Valid UserTo userTo) {
         if (userTo.isNew()) {
             super.create(userTo);
         } else {
             super.update(userTo, userTo.id());
         }
-        // return ResponseEntity.unprocessableEntity().body(dive.getMostSpecificCause().toString());
     }
 
     @Override
