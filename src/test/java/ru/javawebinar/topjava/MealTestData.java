@@ -36,4 +36,19 @@ public class MealTestData {
     public static Meal getUpdated() {
         return new Meal(MEAL1_ID, meal1.getDateTime().plusMinutes(2), "Обновленный завтрак", 200);
     }
+
+    public static Meal getNewInvalidAllFieldsEmpty() {
+        return new Meal(null, null, null, 0);
+    }
+
+    public static Meal getNewInvalidAllFieldsInvalid() {
+        return new Meal(null, of(2020, Month.FEBRUARY, 1, 18, 0), "A", 1);
+    }
+/*
+    public static Meal getNewInvalidDublicateDateTime() {
+        Meal meal = getNew();
+        meal.setDateTime(meal1.getDateTime());
+        return meal;
+    }
+*/
 }

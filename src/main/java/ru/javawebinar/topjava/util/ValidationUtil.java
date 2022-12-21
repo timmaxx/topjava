@@ -80,6 +80,7 @@ public class ValidationUtil {
         return result.getFieldErrors()
                 .stream()
                 .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
+                .sorted()
                 .collect(Collectors.joining("<br>"));
     }
 }
