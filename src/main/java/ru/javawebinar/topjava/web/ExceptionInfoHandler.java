@@ -60,6 +60,17 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, null);
     }
 
+/*
+    // Попытался сделать такой метод, но при раскрытии комментария возникает:
+    // java.lang.IllegalStateException: Failed to load ApplicationContext
+    // Не разобрался.
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ErrorInfo handleMethodArgumentTypeMismatchException(HttpServletRequest req, MethodArgumentTypeMismatchException e) {
+        return logAndGetErrorInfo(req, e, true, VALIDATION_ERROR, null);
+    }
+*/
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorInfo handleError(HttpServletRequest req, Exception e) {
