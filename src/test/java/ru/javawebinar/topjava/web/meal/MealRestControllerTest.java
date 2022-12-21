@@ -41,18 +41,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MEAL_MATCHER.contentJson(meal1));
     }
-/*
-    @Test
-    void getWrongParam() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + WRONG)
-                .with(userHttpBasic(user))
-        )
-                .andExpect(status().isUnprocessableEntity())
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(ErrorResponse_MATCHER.contentJson(errorResponseMeal1));
-    }
-*/
+
     @Test
     void getUnauth() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + MEAL1_ID))
@@ -76,17 +65,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
         assertThrows(NotFoundException.class, () -> mealService.get(MEAL1_ID, USER_ID));
     }
-/*
-    @Test
-    void deleteWrongParam() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + WRONG)
-                .with(userHttpBasic(user))
-        )
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(ErrorResponse_MATCHER.contentJson(errorResponseMeal1));
-    }
-*/
+
     @Test
     void deleteNotFound() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + ADMIN_MEAL_ID)
@@ -134,20 +113,6 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(ErrorInfo_MATCHER.contentJson(ERROR_INFO_MEAL_ALL_FIELDS_INVALID_UPDATING));
     }
 
-    /*
-    @Test
-    void updateWrongParam() throws Exception {
-        Meal updated = getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL + WRONG)
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(userHttpBasic(user))
-                .content(JsonUtil.writeValue(updated))
-        )
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(ErrorResponse_MATCHER.contentJson(errorResponseMeal1));
-    }
-*/
     @Test
     void createWithLocation() throws Exception {
         Meal newMeal = getNew();
@@ -206,20 +171,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(ErrorResponse_MATCHER.contentJson());
     }
 */
-/*
-    @Test
-    void createWithLocationWrongParam() throws Exception {
-        perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(userHttpBasic(user))
-                .content(JsonUtil.writeValue(errorResponseMeal1))
-        )
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(ErrorResponse_MATCHER.contentJson(errorResponseMeal2))
-                ;
-    }
-*/
+
     @Test
     void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL)
@@ -242,18 +194,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(TO_MATCHER.contentJson(createTo(meal5, true), createTo(meal1, false)));
     }
-/*
-    @Test
-    void getBetweenWrongParam() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "filter")
-                .param("startDate", WRONG)
-                .with(userHttpBasic(user))
-        )
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(ErrorResponse_MATCHER.contentJson(errorResponseMeal3));
-    }
-*/
+
     @Test
     void getBetweenAll() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "filter?startDate=&endTime=")

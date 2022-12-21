@@ -59,6 +59,16 @@ public class ExceptionInfoHandler {
         // Вероятно это из-за настройки локали сервера.
         // Как её здесь переопределить?
         // Пробовал и getLocalizedMessage() и getMessage().
+
+        // Как сделать кастомные локализованные сообщения, см. направление в статье
+        // (https://www.logicbig.com/tutorials/spring-framework/spring-core/message-sources.html),
+        // отталкивайся от FieldError в тексте.
+        // Суть в том, что надо сделать кастомные сообщения с нужными кодами и аргументами, которые будут подставляться вместо {0}
+
+        //  ExceptionInfoHandler#conflict - если разберешься с фишкой с FieldError + MessageSource, станет понятно,
+        //  что с Throwable такое же не пройдет, т.к. там не коды, а уже готовое сообщение.
+        //  И тут надо добавить в .properties отдельный код, по которому доставать сообщение из MessageSource.
+        //  Почти то же самое, но код сопоставляем с исключением вручную.
         String messageForClient = e.getMostSpecificCause().getLocalizedMessage();
         return logAndGetErrorInfo(req, e, true, DATA_ERROR, messageForClient);
     }
@@ -72,7 +82,7 @@ public class ExceptionInfoHandler {
 /*
     // Попытался сделать такой метод, но при раскрытии комментария возникает:
     // java.lang.IllegalStateException: Failed to load ApplicationContext
-    // Не разобрался.
+    // Проблема в неоднозначности. Исключение MethodArgumentTypeMismatchException уже обрабатывает метод illegalRequestDataError
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ErrorInfo handleMethodArgumentTypeMismatchException(HttpServletRequest req, MethodArgumentTypeMismatchException e) {
